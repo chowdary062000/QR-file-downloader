@@ -4,262 +4,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic QR Code Dashboard</title>
+    <title>Language Selection with QR Code</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/cont-lang.css" /> <!-- Added the CSS link -->
     <style>
         body {
-            background-image: url('path/to/your/background-image.jpg'); /* Add background image */
+            background-color: #f8f9fa;
             font-family: Arial, sans-serif;
-            color: #343a40; /* Ensure text is visible */
-            background-size: cover; /* Cover the entire page */
-            background-position: center; /* Center the background image */
+            color: #343a40;
         }
 
-        h1 {
-            color: #ffffff; /* Change color for visibility */
+        .flag-icon {
+            width: 30px;
+            height: auto;
+            margin-right: 8px;
+        }
+
+        .lang-option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            margin: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .lang-option:hover {
+            background-color: #e2e6ea;
         }
 
         .qr-code-box {
-            display: flex;
+            display: none;
             justify-content: center;
             padding: 20px;
         }
 
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-
-        footer {
-            margin-top: 20px;
-            color: #ffffff; /* Change color for visibility */
-        }
-
-        .modal-content {
-            background: rgba(255, 255, 255, 0.9); /* Makes modal slightly transparent */
+        .qr-visible {
+            display: flex !important;
         }
     </style>
 </head>
 
 <body>
-    <header class="text-center py-3">
-        <h1>Dynamic QR Code Dashboard</h1>
-        <nav>
-            <ul class="nav justify-content-center">
-                <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Languages</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+    <div class="container py-4">
+        <h2 class="text-center mb-4">Available Languages</h2>
 
-    <main class="container">
-        <section>
-            <h2>Scan QR Code</h2>
-            <div class="qr-code-box">
-                <a href="https://drive.google.com/file/d/1jJqBRfajwuGQFZpAkhx33cykk8q59q5a/view?usp=drivesdk" target="_blank">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?data=https://drive.google.com/file/d/1jJqBRfajwuGQFZpAkhx33cykk8q59q5a/view?usp=drivesdk&size=300x300" alt="Dynamic QR Code" id="dynamicQRCode" />
+        <div class="row justify-content-center" id="languageList">
+            <!-- Language Options -->
+            <div class="col-md-4 lang-option" data-url="https://drive.google.com/file/d/1jJqBRfajwuGQFZpAkhx33cykk8q59q5a/view?usp=drivesdk">
+                <img src="https://twj.mohre.gov.ae/images/icons/English.png" class="flag-icon" alt="English"> English
+            </div>
+            <div class="col-md-4 lang-option" data-url="https://example.com/es">
+                <img src="https://twj.mohre.gov.ae/images/icons/Spanish.png" class="flag-icon" alt="Spanish"> Spanish
+            </div>
+            <div class="col-md-4 lang-option" data-url="https://example.com/fr">
+                <img src="https://twj.mohre.gov.ae/images/icons/French.png" class="flag-icon" alt="French"> French
+            </div>
+            <div class="col-md-4 lang-option" data-url="https://example.com/de">
+                <img src="https://twj.mohre.gov.ae/images/icons/German.png" class="flag-icon" alt="German"> German
+            </div>
+            <div class="col-md-4 lang-option" data-url="https://example.com/ar">
+                <img src="https://twj.mohre.gov.ae/images/icons/Arabic.png" class="flag-icon" alt="Arabic"> Arabic
+            </div>
+            <div class="col-md-4 lang-option" data-url="https://example.com/zh">
+                <img src="https://twj.mohre.gov.ae/images/icons/Chinese.png" class="flag-icon" alt="Chinese"> Chinese
+            </div>
+            <!-- Add more language options as needed -->
+        </div>
+
+        <div class="qr-code-box" id="qrSection">
+            <div class="text-center">
+                <h4>Scan to View/Download</h4>
+                <a id="qrLinkAnchor" href="#" target="_blank">
+                    <img id="dynamicQRCode" src="" alt="QR Code" />
                 </a>
-            </div>
-            <p class="mt-3">Link: <span id="qrLink">https://drive.google.com/file/d/1jJqBRfajwuGQFZpAkhx33cykk8q59q5a/view?usp=drivesdk</span></p>
-            <div class="my-3">
-                <button class="btn btn-primary" id="viewLinkBtn">View Document</button>
-                <button class="btn btn-secondary" id="copyLinkBtn">Copy Link</button>
-            </div>
-
-            <div class="modal fade" id="copyConfirmationModal" tabindex="-1" aria-labelledby="copyConfirmationLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="copyConfirmationLabel">Link Copied</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            The link has been copied to your clipboard!
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section>
-            <h2>Available Languages</h2>
-            <select id="language-select" class="form-select">
-                <option value="en">English</option>
-                <option value="es">Spanish</option>
-                <option value="fr">French</option>
-                <option value="de">German</option>
-                <!-- Add more languages as needed -->
-            </select>
-        </section>
-
-        <section>
-            <h2>Watch Video/شاهد الفيديو</h2>
-            <div class="row text-center">
-                <div class="col">
-                    <a class="cont-lang-box" data-bs-toggle="modal" data-bs-target="#VideoPreview">
-                        <img src="https://twj.mohre.gov.ae/images/icons/Arabic.png" alt="Arabic Video" onclick="PreviewYouTubeVideo('https://www.youtube.com/watch?v=nNEdh_mckkk')" />
-                        <span class="lang-name">Arabic</span>
-                    </a>
-                </div>
-                <div class="col">
-                    <a class="cont-lang-box" data-bs-toggle="modal" data-bs-target="#VideoPreview">
-                        <img src="https://twj.mohre.gov.ae/images/icons/English.png" alt="English Video" onclick="PreviewYouTubeVideo('https://www.youtube.com/watch?v=ydBwdB6PIUQ')" />
-                        <span class="lang-name">English</span>
-                    </a>
-                </div>
-                <div class="col">
-                    <a class="cont-lang-box" data-bs-toggle="modal" data-bs-target="#VideoPreview">
-                        <img src="https://twj.mohre.gov.ae/images/icons/Urdu.png" alt="Urdu Video" onclick="PreviewYouTubeVideo('https://www.youtube.com/watch?v=GpGMjdGLFGw')" />
-                        <span class="lang-name">Urdu</span>
-                    </a>
-                </div>
-                <div class="col">
-                    <a class="cont-lang-box" data-bs-toggle="modal" data-bs-target="#VideoPreview">
-                        <img src="https://twj.mohre.gov.ae/images/icons/Hindi.png" alt="Hindi Video" onclick="PreviewYouTubeVideo('https://www.youtube.com/watch?v=uR70MI0p1Z8')" />
-                        <span class="lang-name">Hindi</span>
-                    </a>
-                </div>
-                <div class="col">
-                    <a class="cont-lang-box" data-bs-toggle="modal" data-bs-target="#VideoPreview">
-                        <img src="https://twj.mohre.gov.ae/images/icons/Malayalam.png" alt="Malayalam Video" onclick="PreviewYouTubeVideo('https://www.youtube.com/watch?v=rEPPWmgVsWk')" />
-                        <span class="lang-name">Malayalam</span>
-                    </a>
-                </div>
-                <div class="col">
-                    <a class="cont-lang-box" data-bs-toggle="modal" data-bs-target="#VideoPreview">
-                        <img src="https://twj.mohre.gov.ae/images/icons/Tagalog.png" alt="Tagalog Video" onclick="PreviewYouTubeVideo('https://www.youtube.com/watch?v=oawgr5c23gM')" />
-                        <span class="lang-name">Tagalog</span>
-                    </a>
-                </div>
-                <div class="col">
-                    <a class="cont-lang-box" data-bs-toggle="modal" data-bs-target="#VideoPreview">
-                        <img src="https://twj.mohre.gov.ae/images/icons/Chinese.png" alt="Chinese Video" onclick="PreviewYouTubeVideo('https://www.youtube.com/watch?v=6D5zqfYY9bk')" />
-                        <span class="lang-name">Chinese</span>
-                    </a>
-                </div>
-                <div class="col">
-                    <a class="cont-lang-box" data-bs-toggle="modal" data-bs-target="#VideoPreview">
-                        <img src="https://twj.mohre.gov.ae/images/icons/Bengali.png" alt="Bengali Video" onclick="PreviewYouTubeVideo('https://www.youtube.com/watch?v=ZN24pDz4EnE')" />
-                        <span class="lang-name">Bengali</span>
-                    </a>
-                </div>
-                <div class="col">
-                    <a class="cont-lang-box" data-bs-toggle="modal" data-bs-target="#VideoPreview">
-                        <img src="https://twj.mohre.gov.ae/images/icons/Pashto.png" alt="Pashto Video" onclick="PreviewYouTubeVideo('https://www.youtube.com/watch?v=AchqSz4Xik4')" />
-                        <span class="lang-name">Pashtu</span>
-                    </a>
-                </div>
-                <div class="col">
-                    <a class="cont-lang-box" data-bs-toggle="modal" data-bs-target="#VideoPreview">
-                        <img src="https://twj.mohre.gov.ae/images/flagicon/swahli.png" alt="Swahili Video" onclick="PreviewYouTubeVideo('https://www.youtube.com/watch?v=AchqSz4Xik4')" />
-                        <span class="lang-name">Swahili</span>
-                    </a>
-                </div>
-                <div class="col">
-                    <a class="cont-lang-box" data-bs-toggle="modal" data-bs-target="#VideoPreview">
-                        <img src="https://twj.mohre.gov.ae/images/icons/French.png" alt="French Video" onclick="PreviewYouTubeVideo('https://www.youtube.com/watch?v=lX_MJknEqjY')" />
-                        <span class="lang-name">French</span>
-                    </a>
-                </div>
-                <div class="col">
-                    <a class="cont-lang-box" data-bs-toggle="modal" data-bs-target="#VideoPreview">
-                        <img src="https://twj.mohre.gov.ae/images/icons/Spanish.png" alt="Spanish Video" onclick="PreviewYouTubeVideo('https://www.youtube.com/watch?v=uU5Wkqc59bM')" />
-                        <span class="lang-name">Spanish</span>
-                    </a>
-                </div>
-                <div class="col">
-                    <a class="cont-lang-box" data-bs-toggle="modal" data-bs-target="#VideoPreview">
-                        <img src="https://twj.mohre.gov.ae/images/icons/Srilanka.png" alt="Sinhala Video" onclick="PreviewYouTubeVideo('https://www.youtube.com/watch?v=fWToJJjSVAo')" />
-                        <span class="lang-name">Sinhala</span>
-                    </a>
-                </div>
-                <div class="col">
-                    <a class="cont-lang-box" data-bs-toggle="modal" data-bs-target="#VideoPreview">
-                        <img src="https://twj.mohre.gov.ae/images/icons/Nepali.png" alt="Nepali Video" onclick="PreviewYouTubeVideo('https://www.youtube.com/watch?v=cTXddxicBWQ')" />
-                        <span class="lang-name">Nepali</span>
-                    </a>
-                </div>
-                <div class="col">
-                    <a class="cont-lang-box" data-bs-toggle="modal" data-bs-target="#VideoPreview">
-                        <img src="https://twj.mohre.gov.ae/images/icons/Dutch.png" alt="Dutch Video" onclick="PreviewYouTubeVideo('https://www.youtube.com/watch?v=GH2CdeMhDho')" />
-                        <span class="lang-name">Dutch</span>
-                    </a>
-                </div>
-                <div class="col">
-                    <a class="cont-lang-box" data-bs-toggle="modal" data-bs-target="#VideoPreview">
-                        <img src="https://twj.mohre.gov.ae/images/icons/Russian.png" alt="Russian Video" onclick="PreviewYouTubeVideo('https://www.youtube.com/watch?v=UiliV9DXE30')" />
-                        <span class="lang-name">Russian</span>
-                    </a>
-                </div>
-                <div class="col">
-                    <a class="cont-lang-box" data-bs-toggle="modal" data-bs-target="#VideoPreview">
-                        <img src="https://twj.mohre.gov.ae/images/icons/germany.png" alt="German Video" onclick="PreviewYouTubeVideo('https://www.youtube.com/watch?v=nKbKouYzrJA')" />
-                        <span class="lang-name">German</span>
-                    </a>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <footer class="text-center py-3">
-        <p>&copy; 2023 Your Company. All rights reserved.</p>
-    </footer>
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            const qrLink = "https://drive.google.com/file/d/1jJqBRfajwuGQFZpAkhx33cykk8q59q5a/view?usp=drivesdk";
-
-            $('#copyLinkBtn').on('click', function () {
-                navigator.clipboard.writeText(qrLink)
-                    .then(() => {
-                        $('#copyConfirmationModal').modal('show');
-                    })
-                    .catch(err => {
-                        console.error('Could not copy text: ', err);
-                    });
-            });
-
-            $('#viewLinkBtn').on('click', function () {
-                window.open(qrLink, '_blank');
-            });
-
-            $('#VideoPreview').on('hide.bs.modal', () => {
-                $('#videoFrame').attr('src', '');
-            });
-        });
-
-        function PreviewYouTubeVideo(videoUrl) {
-            var url = videoUrl.replace("watch?v=", "embed/");
-            document.getElementById('videoFrame').src = url;
-        }
-    </script>
-
-    <!-- Video Preview Modal -->
-    <div class="modal fade" id="VideoPreview" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <iframe width="560" id="videoFrame" height="315" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                <p class="mt-2">URL: <span id="qrLinkText" class="text-primary"></span></p>
+                <div class="mt-3">
+                    <button class="btn btn-primary me-2" id="viewLinkBtn">View Document</button>
+                    <button class="btn btn-secondary" id="copyLinkBtn">Copy Link</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.lang-option').on('click', function () {
+                const url = $(this).data('url');
+                const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(url)}&size=300x300`;
+
+                $('#dynamicQRCode').attr('src', qrApiUrl);
+                $('#qrLinkAnchor').attr('href', url);
+                $('#qrLinkText').text(url);
+                $('#qrSection').addClass('qr-visible');
+
+                // Store link for buttons
+                $('#viewLinkBtn').off('click').on('click', () => window.open(url, '_blank'));
+                $('#copyLinkBtn').off('click').on('click', () => {
+                    navigator.clipboard.writeText(url)
+                        .then(() => alert('Link copied to clipboard!'))
+                        .catch(err => console.error('Could not copy text:', err));
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
